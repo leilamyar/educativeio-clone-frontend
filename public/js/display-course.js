@@ -10,16 +10,7 @@
 
 // TODO : fix CORS error - study Fetch API & HTTP doc on MDN
 
-console.log('fetch-course.js works');
-
 // Fake js object to mock courses - to be replaced with fetch above
-
-// const fetchedCourse = {
-//   courseId: "A000000001",
-//   course_title: "Async Await explained",
-//   authorId: "fff-mathias",
-//   chapters: ['Async JS Intro', 'Using Promises', 'Using Async Await', 'Conclusion'],
-// };
 
 // joined data
 const fetchedContent = [
