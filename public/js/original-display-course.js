@@ -1,4 +1,19 @@
 'use strict';
+// const fetchCourse = async(courseId) => {
+//   const courses = fetch('../../data/courses.mock.json')
+//   .then(response => response.json())
+//   .then(data => console.log(`courses fetched:${courseId}:`, data));
+
+//   return courses;
+// };
+
+// fetchCourse('hardcoded course id in js file');
+
+// TODO : fix CORS error - study Fetch API & HTTP doc on MDN
+
+// Fake js object to mock courses - to be replaced with fetch above
+
+// joined data
 const fetchedContent = [
   { 
     chapTitle: "Async JS Intro",
@@ -29,87 +44,100 @@ const fetchedContent = [
   },
 ];
 
-// Helper fn
-
-// TODO: refactor FP with named args ?
-const createElem = (typeString, 
-  textContent = null, 
-  className = null) => {
-  // console.log('Creating an element with values:');
-  // console.log('type =', typeString);
-  // console.log(', content =', textContent);
-  // console.log(', className =', className);
-  // console.log(', attributes =', attributes);
-
-  const elem = document.createElement(typeString);
-  // Set class
-  if (className) {
-    elem.className += (className);
-  }
-  // Set innerText OR innerHTML
-  if (!textContent) {
-    return elem;
-  } else {
-    if (typeof textContent == 'string') {
-      elem.innerText = textContent;
-    } else {
-      elem.innerHtml = textContent;
-    }
-  }
-  return elem;
-};
-
-// For each Chapter of the Course:
-// - Fill in course-menu with menu-chap-container
-// - Create Part Articles : will be displayed when Part Link clicked in menu-chap-container
-
-const makeCourseArticle = (partTitle, partContent) => {
-  const course = createElem('section', null, 'course-content');
-  [ createElem('h1', partTitle), createElem('p', partContent)]
-    .forEach((el) => {
-      course.appendChild(el);
-    });
-  return course;
-};
-
-const makeArticleListeningLink = (title, content) => {
-  const articleLink = createElem('a', title, 'toggable-parts-container');
+const createCourseArticle = (partTitle, partContent) => {
+  // TODO: add subparts display + (mock) data
   
-  articleLink.addEventListener('click', () => {
-    // Find if already displayed article 
-    // & removes it from DOM
-    const found = document.getElementsByClassName('course-content');
-    if (found) {
-      for (const f of found) {
-        f.parentNode.removeChild(f);
-        console.log('REMOVED --> found:', found.length)
-      }
-    }
-    // Then display newly clicked article
-    const courseContainer = document.querySelector('.part-content-container');
-    courseContainer
-      .appendChild(makeCourseArticle(title, content));
+  // const 
+
+  const articleTitleEl = document.createElement('h4');
+  articleTitleEl.innerText = partTitle;
+  
+  const contentEl = document.createElement('p');
+  contentEl.innerText = partContent;  
+  
+  const sectionContainer = document.createElement('section');
+  sectionContainer.className += 'course-content';
+  sectionContainer.appendChild(contentEl);
+  
+  return [
+    articleTitleEl,
+    sectionContainer,
+  ];
+};
+
+const createPartElements = (partObj, partId) => {
+  const partTitleEl = document.createElement('h4');
+  const partTitleLink = document.createElement('a');
+
+  partTitleEl.id = partId;
+  partTitleEl.className += 'menu-part';
+  partTitleLink.innerText = partObj.title;
+  
+  partTitleEl.setAttribute('data-part-content', partObj.content);
+  partTitleLink.addEventListener('click', function(e) { // FIXME: rm this if not used / check what it is
+    e.preventDefault();
+    const contentContainer = document.querySelector('.chap-content-container');
+    // contentContainer.removeChild('???'); 
+    // FIXME: article are not removed when new part link is clicked
+
+    const [title, content] = createCourseArticle(partObj.title, partObj.content);
+    // console(partTitleLink);
+    // console(partTitleEl);
   });
-  return articleLink;
+  partTitleEl.appendChild(partTitleLink);
+  return partTitleEl;
+};
+
+const makeMenuChapContainer = (chapter) => {
+  
+  // Create Menu components for a chapter: 
+  // a title + button to toggle a chapter's subtitles (called 'parts')
+  const chapContainer = document.createElement('div');
+  const chapTitleEl = document.createElement('h3')
+  const toggleBtn = document.createElement('button');
+  const toggablePartsContainer = document.createElement('div');
+  
+  const chapParts = chapter.content.map((cc, i) => {
+    return createPartElements(cc, `${chapter.chapTitle}-${i}`);
+  });
+
+  chapContainer.className += ('menu-chap-container');
+  chapTitleEl.innerText += chapter.chapTitle;
+  toggablePartsContainer.className += 'toggable-parts-container';
+  toggablePartsContainer.setAttribute('data-is-toggled', false);
+
+
+  toggleBtn.className += 'toggle-btn';
+  toggleBtn.innerText = 'Toggle'; // TODO: replace with arrow icon
+  toggleBtn.addEventListener('click', () => {
+    if(toggablePartsContainer.dataset.isToggled != 'true') {
+      // console.log(toggablePartsContainer)
+      chapParts.forEach((cp) => {
+        toggablePartsContainer.dataset.isToggled = 'true';
+        toggablePartsContainer.appendChild(cp);
+      });
+    } else {
+      chapParts.forEach((cp) => {
+        toggablePartsContainer.dataset.isToggled = 'false';
+        toggablePartsContainer.removeChild(cp)
+      });
+    };
+  });
+
+  chapContainer.appendChild(chapTitleEl);
+  chapContainer.appendChild(toggleBtn);
+  chapContainer.appendChild(toggablePartsContainer);
+
+  return chapContainer;
 };
 
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
-    // const courseMenu = document.querySelector('.course-menu');
-
-    // For each part of a course's chapter
-    const t = 'some title';
-    const cc = 'some content for course';
-    // Make a link for part (add it to menu-chap-container, after chap-title in menu)
-    // FAKE : added to menu without chap-container:
-    const menu = document.querySelector('.course-menu');
-    menu.appendChild(makeArticleListeningLink(t, cc));
+    const courseMenu = document.querySelector('.course-menu');
     
-    
-
     // fetch data here
-    // fetchedContent
-      // .map((c) => makeMenuChapContainer(c))
-      // .forEach((cc) => courseMenu.appendChild(cc));
+    fetchedContent
+      .map((c) => makeMenuChapContainer(c))
+      .forEach((cc) => courseMenu.appendChild(cc));
   };
-});
+})
