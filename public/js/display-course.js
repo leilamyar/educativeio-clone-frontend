@@ -1,3 +1,4 @@
+'use strict';
 // const fetchCourse = async(courseId) => {
 //   const courses = fetch('../../data/courses.mock.json')
 //   .then(response => response.json())
@@ -46,6 +47,8 @@ const fetchedContent = [
 const createCourseArticle = (partTitle, partContent) => {
   // TODO: add subparts display + (mock) data
   
+  // const 
+
   const articleTitleEl = document.createElement('h4');
   articleTitleEl.innerText = partTitle;
   
@@ -78,8 +81,6 @@ const createPartElements = (partObj, partId) => {
     // FIXME: article are not removed when new part link is clicked
 
     const [title, content] = createCourseArticle(partObj.title, partObj.content);
-    contentContainer.appendChild(title);
-    contentContainer.appendChild(content);
     // console(partTitleLink);
     // console(partTitleEl);
   });
@@ -87,8 +88,10 @@ const createPartElements = (partObj, partId) => {
   return partTitleEl;
 };
 
-const makeChapContainerForMenu = (chapter) => {
+const makeMenuChapContainer = (chapter) => {
   
+  // Create Menu components for a chapter: 
+  // a title + button to toggle a chapter's subtitles (called 'parts')
   const chapContainer = document.createElement('div');
   const chapTitleEl = document.createElement('h3')
   const toggleBtn = document.createElement('button');
@@ -98,7 +101,7 @@ const makeChapContainerForMenu = (chapter) => {
     return createPartElements(cc, `${chapter.chapTitle}-${i}`);
   });
 
-  chapContainer.className += ('chap-container');
+  chapContainer.className += ('menu-chap-container');
   chapTitleEl.innerText += chapter.chapTitle;
   toggablePartsContainer.className += 'toggable-parts-container';
   toggablePartsContainer.setAttribute('data-is-toggled', false);
@@ -134,7 +137,7 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
     
     // fetch data here
     fetchedContent
-      .map((c) => makeChapContainerForMenu(c))
+      .map((c) => makeMenuChapContainer(c))
       .forEach((cc) => courseMenu.appendChild(cc));
   };
 })
