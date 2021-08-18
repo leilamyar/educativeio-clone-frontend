@@ -1,0 +1,93 @@
+{
+  "courses": [
+    {
+      "course_title": "course_1",
+      "author": "Mathias",
+      "chapters": [
+        { "chap_01": 
+          { "chap_title":"course_1_chap_01"}, "chap_parts": [{"part_01":"chap_1_part1"}, {"part_02":"chap_1_part2"},{"part_03":"chap_1_part3"}]
+        },
+        { "chap_02": 
+          { "chap_title":"course_1_chap_02"},
+            "chap_parts": [{"part_01":"chap_2_part1"}, {"part_02":"chap_2_part2"},{"part_03":"chap_2_part3"}, {"part_04":"chap_1_part4"}, {"part_05":"chap_1_part5"}, {"part_06":"chap_1_part6"}]
+        },
+        { "chap_03": 
+          { "chap_title":"course_1_chap_03"},
+            "chap_parts": [{"part_01":"chap_3_part1"}, {"part_02":"chap_3_part2"},{"part_03":"chap_3_part3"},
+              {"part_04":"chap_1_part4"}, {"part_05":"chap_1_part5"}]
+        },
+        { "chap_04": 
+          { "chap_title":"course_2_chap_04"},
+            "chap_parts": [{"part_01":"chap_4_part1"}, {"part_02":"chap_4_part2"},{"part_03":"chap_4_part3"}, {"part_04":"chap_4_part4"}]
+        }
+      ]
+    },
+    {
+      "course_title": "course_2",
+      "author": "Coding Train",
+      "chapters": [
+        { "chap_01": 
+          { "chap_title":"course_2_chap_01"},
+            "chap_parts": [{"part_01":"chap_1_part1"}, {"part_02":"chap_1_part2"},{"part_03":"chap_1_part3"}, {"part_04":"chap_4_part4"},
+              {"part_05":"chap_1_part5"}, {"part_06":"chap_1_part6"}]
+        },
+        { "chap_02": 
+          { "chap_title":"course_2_chap_02"},
+            "chap_parts": [{"part_01":"chap_2_part1"}, {"part_02":"chap_2_part2"},{"part_03":"chap_2_part3"}, {"part_04":"chap_4_part4"}]
+        },
+        { "chap_03": 
+          { "chap_title":"course_2_chap_03"},
+            "chap_parts": [{"part_01":"chap_3_part1"}, {"part_02":"chap_3_part2"},{"part_03":"chap_3_part3"}]
+        },
+        { "chap_04": 
+          { "chap_title":"course_2_chap_04"},
+            "chap_parts": [{"part_01":"chap_4_part1"}, {"part_02":"chap_4_part2"},{"part_03":"chap_4_part3"}, {"part_04":"chap_4_part4"},
+              {"part_05":"chap_1_part5"}, {"part_06":"chap_1_part6"}]
+        },
+        { "chap_05": 
+          { "chap_title":"course_2_chap_05"},
+            "chap_parts": [{"part_01":"chap_5_part1"}, {"part_02":"chap_5_part2"},{"part_03":"chap_5_part3"}, {"part_04":"chap_4_part4"},
+            {"part_05":"chap_1_part5"}]
+        }
+      ]
+    },
+    {
+      "course_title": "course_2",
+      "author": "Traversy Media",
+      "chapters": [
+        { "chap_01": 
+          { "chap_title":"course_2_chap_01"},
+            "chap_parts": [{"part_01":"chap_1_part1"}, {"part_02":"chap_1_part2"},{"part_03":"chap_1_part3"}]
+        },
+        { "chap_02": 
+          { "chap_title":"course_2_chap_02"},
+            "chap_parts": [{"part_01":"chap_2_part1"}, {"part_02":"chap_2_part2"},{"part_03":"chap_2_part3"}, {"part_04":"chap_4_part4"},
+              {"part_05":"chap_1_part5"}, {"part_06":"chap_1_part6"}]
+        },
+        { "chap_03": 
+          { "chap_title":"course_2_chap_03"},
+            "chap_parts": [{"part_01":"chap_3_part1"}, {"part_02":"chap_3_part2"},{"part_03":"chap_3_part3"}, {"part_04":"chap_4_part4"}]
+        },
+        { "chap_04": 
+          { "chap_title":"course_2_chap_04"},
+            "chap_parts": [{"part_01":"chap_4_part1"}, {"part_02":"chap_4_part2"},{"part_03":"chap_4_part3"}, {"part_04":"chap_4_part4"},
+            {"part_05":"chap_1_part5"}, {"part_06":"chap_1_part6"}]
+        },
+        { "chap_05": 
+          { "chap_title":"course_2_chap_05"},
+            "chap_parts": [{"part_01":"chap_5_part1"}, {"part_02":"chap_5_part2"},{"part_03":"chap_5_part3"}]
+        },
+        { "chap_06": 
+          { "chap_title":"course_2_chap_06"},
+            "chap_parts": [{"part_01":"chap_6_part1"}, {"part_02":"chap_6_part2"},{"part_03":"chap_6_part3"}, {"part_04":"chap_4_part4"}]
+        }
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "id":"course_1_chap_01",
+      "content": "Loops"
+    }
+  ]
+}
