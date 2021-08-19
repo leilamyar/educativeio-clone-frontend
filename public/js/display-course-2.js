@@ -93,19 +93,48 @@ const makeArticleListeningLink = (title, content) => {
   return articleLink;
 };
 
+const makeToggableArticleList = (articleLinks = []) => {
+  const toggableContainer = createElem('div', null,'toggable-parts-container');
+  toggableContainer.setAttribute('data-is-toggled', false);
+
+  const toggleBtn = createElem('button', 'Toggle', 'toggle-btn');
+  
+  toggleBtn.addEventListener('click', () => {
+    if(toggableContainer.dataset.isToggled != 'true') {
+      // console.log(toggableContainer)
+      articleLinks.forEach((link) => {
+        toggableContainer.dataset.isToggled = 'true';
+        toggableContainer.appendChild(link);
+      });
+    } else {
+      articleLinks.forEach((link) => {
+        toggableContainer.dataset.isToggled = 'false';
+        toggableContainer.removeChild(link)
+      });
+    };
+  });
+
+  toggableContainer.appendChild(toggleBtn);
+  // articleLinks.forEach((link) => toggableContainer.appendChild(link));
+
+  return toggableContainer;
+};
+
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
-    // const courseMenu = document.querySelector('.course-menu');
+    const menu = document.querySelector('.course-menu');
+
+
 
     // For each part of a course's chapter
     const t = 'some title';
     const cc = 'some content for course';
     // Make a link for part (add it to menu-chap-container, after chap-title in menu)
     // FAKE : added to menu without chap-container:
-    const menu = document.querySelector('.course-menu');
-    menu.appendChild(makeArticleListeningLink(t, cc));
+    // const menu = document.querySelector('.course-menu');
+    // menu.appendChild(makeArticleListeningLink(t, cc));
     
-    
+    menu.appendChild(makeToggableArticleList([makeArticleListeningLink(t, cc)]));
 
     // fetch data here
     // fetchedContent
