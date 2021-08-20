@@ -90,6 +90,7 @@ const makeArticleListeningLink = (title, content) => {
     }
     // Then display newly clicked article
     const courseContainer = document.querySelector('.chap-content-container');
+    // console.log('course c:', courseContainer);
     courseContainer
       .appendChild(makeCourseArticle(title, content));
   });
@@ -143,15 +144,22 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
     
     // fetch data here
-    const chaptersForMenu = course.map((chapter) => {
-      const toggableTitles = makeToggableTitlesWithBtn(chapter.content
-        .map((article) => {
-          return makeArticleListeningLink(article.title, article.content);
-        }));
-        return makeMenuChapContainer(chapter.title, toggableTitles);
+    const chapsC = course
+      .map((chap) => {
+        const m = new Map();
+        const toggableC = chap.content
+          .map((cc) => {
+            const links = makeArticleListeningLink(cc.title, cc.content);
+            const linksC = makeToggableTitlesWithBtn(links); // links-c
+            console.log(linksC);
+            return linksC;
+        });
+        const jj = makeMenuChapContainer(chap.chapTitle, toggableC);
+        m.set(chap.chapTitle, jj);
+        return m;
       });
       
-      console.log(chaptersForMenu)
+    console.log(chaptersForMenu)
     
     // For each part of a course's chapter
     // const chapTtl = 'Chap title';
@@ -171,7 +179,7 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
     // console.log(chapMenu)
     
     
-    chaptersForMenu.forEach((cm) => menu.appendChild(cm));
+    chapsC.forEach((cm) => menu.appendChild(cm));
 
   };
 });
