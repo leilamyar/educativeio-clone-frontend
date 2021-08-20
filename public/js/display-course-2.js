@@ -1,5 +1,8 @@
 'use strict';
-const fetchedContent = [
+const course = [
+  // 1 obj = 1 chap-content
+  // 1 chap-content = * articles
+  // 1 article = 1 title + * art-content
   { 
     chapTitle: "Async JS Intro",
     content: [
@@ -139,32 +142,36 @@ const makeMenuChapContainer = (chapTitle, toggableTitles) => {
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
     
-    
+    // fetch data here
+    const chaptersForMenu = course.map((chapter) => {
+      const toggableTitles = makeToggableTitlesWithBtn(chapter.content
+        .map((article) => {
+          return makeArticleListeningLink(article.title, article.content);
+        }));
+        return makeMenuChapContainer(chapter.title, toggableTitles);
+      });
+      
+      console.log(chaptersForMenu)
     
     // For each part of a course's chapter
-    const chapTtl = 'Chap title';
-    const t = 'some title';
-    const cc = 'some content for course';
+    // const chapTtl = 'Chap title';
+    // const t = 'some title';
+    // const cc = 'some content for course';
     // Make a link for part (add it to menu-chap-container, after chap-title in menu)
     // FAKE : added to menu without chap-container:
-    // const menu = document.querySelector('.course-menu');
+    const menu = document.querySelector('.course-menu');
     // menu.appendChild(makeArticleListeningLink(t, cc));
     
-    const toggableTitles = makeToggableTitlesWithBtn([makeArticleListeningLink(t, cc)]);
-    console.log(toggableTitles)
+    // const toggableTitles = makeToggableTitlesWithBtn([makeArticleListeningLink(t, cc)]);
+    // console.log(toggableTitles)
     
-    const chapMenu = makeMenuChapContainer(chapTtl, toggableTitles);
+    // const chapMenu = makeMenuChapContainer(chapTtl, toggableTitles);
     // chapMenu.appendChild(toggableTitles.btn);
     // chapMenu.appendChild(toggableTitles.titlesContainer);
     // console.log(chapMenu)
     
     
-    const menu = document.querySelector('.course-menu');
-    menu.appendChild(chapMenu);
+    chaptersForMenu.forEach((cm) => menu.appendChild(cm));
 
-    // fetch data here
-    // fetchedContent
-      // .map((c) => makeMenuChapContainer(c))
-      // .forEach((cc) => courseMenu.appendChild(cc));
   };
 });
