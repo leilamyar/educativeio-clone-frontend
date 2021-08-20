@@ -86,7 +86,7 @@ const makeArticleListeningLink = (title, content) => {
       }
     }
     // Then display newly clicked article
-    const courseContainer = document.querySelector('.part-content-container');
+    const courseContainer = document.querySelector('.chap-content-container');
     courseContainer
       .appendChild(makeCourseArticle(title, content));
   });
@@ -120,6 +120,15 @@ const makeToggableArticleList = (articleLinks = []) => {
   return toggableContainer;
 };
 
+const makeMenuChapContainer = (chapTitle, toggableContainer) => {
+  const chapContainer = createElem('div', null, 'menu-chap-container');
+  chapContainer.appendChild(createElem('h3', chapTitle));
+  // console.log(chapContainer)
+  // console.log(toggableContainer)
+  chapContainer.appendChild(toggableContainer);
+  return chapContainer;
+};
+
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
     const menu = document.querySelector('.course-menu');
@@ -127,6 +136,7 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
 
 
     // For each part of a course's chapter
+    const chapTtl = 'Chap title';
     const t = 'some title';
     const cc = 'some content for course';
     // Make a link for part (add it to menu-chap-container, after chap-title in menu)
@@ -134,7 +144,15 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
     // const menu = document.querySelector('.course-menu');
     // menu.appendChild(makeArticleListeningLink(t, cc));
     
-    menu.appendChild(makeToggableArticleList([makeArticleListeningLink(t, cc)]));
+    const toggableMenuTitles = makeToggableArticleList([makeArticleListeningLink(t, cc)]);
+    // console.log(toggableMenuTitles)
+
+    const chapMenu = makeMenuChapContainer(chapTtl, toggableMenuTitles);
+
+    console.log(chapMenu)
+
+    
+    menu.appendChild(makeMenuChapContainer(chapTtl, toggableMenuTitles));
 
     // fetch data here
     // fetchedContent
