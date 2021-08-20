@@ -78,3 +78,10 @@ article.chap-content-container {
   width:200px;
   height:150px;
 }
+
+.titles-container,
+.title-link 
+{
+  padding: 0.5em;
+  margin: 0.5em;
+}

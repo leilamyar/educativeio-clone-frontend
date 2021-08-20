@@ -73,7 +73,7 @@ const makeCourseArticle = (partTitle, partContent) => {
 };
 
 const makeArticleListeningLink = (title, content) => {
-  const articleLink = createElem('a', title, 'toggable-parts-container');
+  const articleLink = createElem('a', title, 'title-link');
   
   articleLink.addEventListener('click', () => {
     // Find if already displayed article 
@@ -94,38 +94,39 @@ const makeArticleListeningLink = (title, content) => {
 };
 
 const makeToggableArticleList = (articleLinks = []) => {
-  const toggableContainer = createElem('div', null,'toggable-parts-container');
-  toggableContainer.setAttribute('data-is-toggled', false);
+  const titlesContainer = createElem('div', null,'titles-container');
+  titlesContainer.setAttribute('data-is-toggled', false);
 
   const toggleBtn = createElem('button', 'Toggle', 'toggle-btn');
   
   toggleBtn.addEventListener('click', () => {
-    if(toggableContainer.dataset.isToggled != 'true') {
-      // console.log(toggableContainer)
+    if(titlesContainer.dataset.isToggled != 'true') {
+      // console.log(titlesContainer)
       articleLinks.forEach((link) => {
-        toggableContainer.dataset.isToggled = 'true';
-        toggableContainer.appendChild(link);
+        titlesContainer.dataset.isToggled = 'true';
+        titlesContainer.appendChild(link);
       });
     } else {
       articleLinks.forEach((link) => {
-        toggableContainer.dataset.isToggled = 'false';
-        toggableContainer.removeChild(link)
+        titlesContainer.dataset.isToggled = 'false';
+        titlesContainer.removeChild(link)
       });
     };
   });
 
+  const toggableContainer = createElem('div', null, 'toggable-container');
   toggableContainer.appendChild(toggleBtn);
-  // articleLinks.forEach((link) => toggableContainer.appendChild(link));
+  toggableContainer.appendChild(titlesContainer);
 
   return toggableContainer;
 };
 
-const makeMenuChapContainer = (chapTitle, toggableContainer) => {
+const makeMenuChapContainer = (chapTitle /*, toggableContainer */) => {
   const chapContainer = createElem('div', null, 'menu-chap-container');
   chapContainer.appendChild(createElem('h3', chapTitle));
   // console.log(chapContainer)
   // console.log(toggableContainer)
-  chapContainer.appendChild(toggableContainer);
+  // chapContainer.appendChild(toggableContainer);
   return chapContainer;
 };
 
@@ -148,11 +149,11 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
     // console.log(toggableMenuTitles)
 
     const chapMenu = makeMenuChapContainer(chapTtl, toggableMenuTitles);
-
-    console.log(chapMenu)
+    chapMenu.appendChild(toggableMenuTitles);
+    // console.log(chapMenu)
 
     
-    menu.appendChild(makeMenuChapContainer(chapTtl, toggableMenuTitles));
+    menu.appendChild(chapMenu);
 
     // fetch data here
     // fetchedContent
