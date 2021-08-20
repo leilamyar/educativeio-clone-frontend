@@ -93,7 +93,7 @@ const makeArticleListeningLink = (title, content) => {
   return articleLink;
 };
 
-const makeToggableArticleList = (articleLinks = []) => {
+const makeToggableTitlesWithBtn = (articleLinks = []) => {
   const titlesContainer = createElem('div', null,'titles-container');
   titlesContainer.setAttribute('data-is-toggled', false);
 
@@ -114,28 +114,33 @@ const makeToggableArticleList = (articleLinks = []) => {
     };
   });
 
-  const toggableContainer = createElem('div', null, 'toggable-container');
-  toggableContainer.appendChild(toggleBtn);
-  toggableContainer.appendChild(titlesContainer);
+  // const toggableContainer = createElem('div', null, 'toggable-container');
+  // toggableContainer.appendChild(toggleBtn);
+  // toggableContainer.appendChild(titlesContainer);
 
-  return toggableContainer;
+  // return toggableContainer;
+  return {
+    btn: toggleBtn,
+    titlesContainer: titlesContainer,
+  };
 };
 
-const makeMenuChapContainer = (chapTitle /*, toggableContainer */) => {
+const makeMenuChapContainer = (chapTitle, toggableTitles) => {
   const chapContainer = createElem('div', null, 'menu-chap-container');
-  chapContainer.appendChild(createElem('h3', chapTitle));
-  // console.log(chapContainer)
-  // console.log(toggableContainer)
-  // chapContainer.appendChild(toggableContainer);
+  const chapHeader = createElem('h3', null, 'chap-header');
+  const chapTitleEl = createElem('h3', chapTitle);
+  chapHeader.appendChild(chapTitleEl);
+  chapHeader.appendChild(toggableTitles.btn);
+  chapContainer.appendChild(chapHeader);
+  chapContainer.appendChild(toggableTitles.titlesContainer);
   return chapContainer;
 };
 
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
-    const menu = document.querySelector('.course-menu');
-
-
-
+    
+    
+    
     // For each part of a course's chapter
     const chapTtl = 'Chap title';
     const t = 'some title';
@@ -145,14 +150,16 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
     // const menu = document.querySelector('.course-menu');
     // menu.appendChild(makeArticleListeningLink(t, cc));
     
-    const toggableMenuTitles = makeToggableArticleList([makeArticleListeningLink(t, cc)]);
-    // console.log(toggableMenuTitles)
-
-    const chapMenu = makeMenuChapContainer(chapTtl, toggableMenuTitles);
-    chapMenu.appendChild(toggableMenuTitles);
-    // console.log(chapMenu)
-
+    const toggableTitles = makeToggableTitlesWithBtn([makeArticleListeningLink(t, cc)]);
+    console.log(toggableTitles)
     
+    const chapMenu = makeMenuChapContainer(chapTtl, toggableTitles);
+    // chapMenu.appendChild(toggableTitles.btn);
+    // chapMenu.appendChild(toggableTitles.titlesContainer);
+    // console.log(chapMenu)
+    
+    
+    const menu = document.querySelector('.course-menu');
     menu.appendChild(chapMenu);
 
     // fetch data here

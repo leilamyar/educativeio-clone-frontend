@@ -85,3 +85,18 @@ article.chap-content-container {
   padding: 0.5em;
   margin: 0.5em;
 }
+
+.chap-header {
+  display: flex;
+  justify-content: space-between;
+  /* height: max-content; */
+  margin: 0;
+}
+.chap-header>h3 {
+  margin: 0;
+}
+
+.chap-header>button {
+  height: max-content;
+  margin: auto 0;
+}
