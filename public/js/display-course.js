@@ -1,20 +1,8 @@
 'use strict';
-// const fetchCourse = async(courseId) => {
-//   const courses = fetch('../../data/courses.mock.json')
-//   .then(response => response.json())
-//   .then(data => console.log(`courses fetched:${courseId}:`, data));
-
-//   return courses;
-// };
-
-// fetchCourse('hardcoded course id in js file');
-
-// TODO : fix CORS error - study Fetch API & HTTP doc on MDN
-
-// Fake js object to mock courses - to be replaced with fetch above
-
-// joined data
-const fetchedContent = [
+const course = [
+  // 1 obj = 1 chap-content
+  // 1 chap-content = * articles
+  // 1 article = 1 title + * art-content
   { 
     chapTitle: "Async JS Intro",
     content: [
@@ -44,100 +32,117 @@ const fetchedContent = [
   },
 ];
 
-const createCourseArticle = (partTitle, partContent) => {
-  // TODO: add subparts display + (mock) data
-  
-  // const 
+// Helper fn
 
-  const articleTitleEl = document.createElement('h4');
-  articleTitleEl.innerText = partTitle;
-  
-  const contentEl = document.createElement('p');
-  contentEl.innerText = partContent;  
-  
-  const sectionContainer = document.createElement('section');
-  sectionContainer.className += 'course-content';
-  sectionContainer.appendChild(contentEl);
-  
-  return [
-    articleTitleEl,
-    sectionContainer,
-  ];
+// TODO: refactor FP with named args ?
+const createElem = (typeString, 
+  textContent = null, 
+  className = null) => {
+  // console.log('Creating an element with values:');
+  // console.log('type =', typeString);
+  // console.log(', content =', textContent);
+  // console.log(', className =', className);
+  // console.log(', attributes =', attributes);
+
+  const elem = document.createElement(typeString);
+  // Set class
+  if (className) {
+    elem.className += (className);
+  }
+  // Set innerText OR innerHTML
+  if (!textContent) {
+    return elem;
+  } else {
+    if (typeof textContent == 'string') {
+      elem.innerText = textContent;
+    } else {
+      elem.innerHtml = textContent;
+    }
+  }
+  return elem;
 };
 
-const createPartElements = (partObj, partId) => {
-  const partTitleEl = document.createElement('h4');
-  const partTitleLink = document.createElement('a');
+// For each Chapter of the Course:
+// - Fill in course-menu with menu-chap-container
+// - Create Part Articles : will be displayed when Part Link clicked in menu-chap-container
 
-  partTitleEl.id = partId;
-  partTitleEl.className += 'menu-part';
-  partTitleLink.innerText = partObj.title;
-  
-  partTitleEl.setAttribute('data-part-content', partObj.content);
-  partTitleLink.addEventListener('click', function(e) { // FIXME: rm this if not used / check what it is
-    e.preventDefault();
-    const contentContainer = document.querySelector('.chap-content-container');
-    // contentContainer.removeChild('???'); 
-    // FIXME: article are not removed when new part link is clicked
-
-    const [title, content] = createCourseArticle(partObj.title, partObj.content);
-    // console(partTitleLink);
-    // console(partTitleEl);
-  });
-  partTitleEl.appendChild(partTitleLink);
-  return partTitleEl;
+const makeCourseArticle = (articleTtl, articleContent) => {
+  const course = createElem('section', null, 'course-content');
+  [ createElem('h1', articleTtl), createElem('p', articleContent)]
+    .forEach((el) => {
+      course.appendChild(el);
+    });
+  return course;
 };
 
-const makeMenuChapContainer = (chapter) => {
+const makeArticleListeningLink = (title, content) => {
+  const articleLink = createElem('a', title, 'title-link');
   
-  // Create Menu components for a chapter: 
-  // a title + button to toggle a chapter's subtitles (called 'parts')
-  const chapContainer = document.createElement('div');
-  const chapTitleEl = document.createElement('h3')
-  const toggleBtn = document.createElement('button');
-  const toggablePartsContainer = document.createElement('div');
-  
-  const chapParts = chapter.content.map((cc, i) => {
-    return createPartElements(cc, `${chapter.chapTitle}-${i}`);
+  articleLink.addEventListener('click', () => {
+    // Find if already displayed article 
+    // & removes it from DOM
+    const found = document.getElementsByClassName('course-content');
+    if (found) {
+      for (const f of found) {
+        f.parentNode.removeChild(f);
+        console.log('REMOVED --> found:', found.length)
+      }
+    }
+    // Then display newly clicked article
+    const courseContainer = document.querySelector('.chap-content-container');
+    courseContainer
+      .appendChild(makeCourseArticle(title, content));
   });
+  return articleLink;
+};
 
-  chapContainer.className += ('menu-chap-container');
-  chapTitleEl.innerText += chapter.chapTitle;
-  toggablePartsContainer.className += 'toggable-parts-container';
-  toggablePartsContainer.setAttribute('data-is-toggled', false);
-
-
-  toggleBtn.className += 'toggle-btn';
-  toggleBtn.innerText = 'Toggle'; // TODO: replace with arrow icon
+const makeToggableTitlesWithBtn = (articleLinks = []) => {
+  const titlesContainer = createElem('div', null,'titles-container');
+  titlesContainer.setAttribute('data-is-toggled', false);
+  const toggleBtn = createElem('button', 'Toggle', 'toggle-btn');
   toggleBtn.addEventListener('click', () => {
-    if(toggablePartsContainer.dataset.isToggled != 'true') {
-      // console.log(toggablePartsContainer)
-      chapParts.forEach((cp) => {
-        toggablePartsContainer.dataset.isToggled = 'true';
-        toggablePartsContainer.appendChild(cp);
+    if(titlesContainer.dataset.isToggled != 'true'
+      || !titlesContainer.dataset.isToggled) {
+      console.log(titlesContainer)
+      articleLinks.forEach((link) => {
+        titlesContainer.dataset.isToggled = 'true';
+        titlesContainer.appendChild(link);
       });
     } else {
-      chapParts.forEach((cp) => {
-        toggablePartsContainer.dataset.isToggled = 'false';
-        toggablePartsContainer.removeChild(cp)
+      articleLinks.forEach((link) => {
+        titlesContainer.dataset.isToggled = 'false';
+        titlesContainer.removeChild(link)
       });
     };
   });
+  return {
+    btn: toggleBtn,
+    titlesContainer: titlesContainer,
+  };
+};
 
-  chapContainer.appendChild(chapTitleEl);
-  chapContainer.appendChild(toggleBtn);
-  chapContainer.appendChild(toggablePartsContainer);
-
+const makeMenuChapContainer = (chapTitle, toggableTitles) => {
+  const chapContainer = createElem('div', null, 'menu-chap-container');
+  const chapHeader = createElem('h3', null, 'chap-header');
+  const chapTitleEl = createElem('h3', chapTitle);
+  chapHeader.appendChild(chapTitleEl);
+  chapHeader.appendChild(toggableTitles.btn);
+  chapContainer.appendChild(chapHeader);
+  chapContainer.appendChild(toggableTitles.titlesContainer);
   return chapContainer;
 };
 
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
   if(document.readyState == "interactive") {
-    const courseMenu = document.querySelector('.course-menu');
-    
+    const menu = document.querySelector('.course-menu');
     // fetch data here
-    fetchedContent
-      .map((c) => makeMenuChapContainer(c))
-      .forEach((cc) => courseMenu.appendChild(cc));
+    const chapsC = course
+      .map((chap) => { 
+        const linksC = chap.content.map((cc) => makeArticleListeningLink(cc.title, cc.content));
+        const toggableC = makeToggableTitlesWithBtn(linksC); 
+        return makeMenuChapContainer(chap.chapTitle, toggableC);
+      });
+    chapsC
+      .forEach((cm) => menu.appendChild(cm));
   };
-})
+});

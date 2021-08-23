@@ -55,7 +55,9 @@ a, a:hover, a:focus, a:active {
   outline: var(--dark-highlight) solid 1px;
   font-style: italic;
 }
-.search-course {
+.search-course,
+.title-link
+{
   display: block;
 }
 
