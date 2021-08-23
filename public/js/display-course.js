@@ -27,8 +27,10 @@ const course = [
   },
   {
     chapTitle: "Conclusion",
-    content: [ 
-      { title: "", content: " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Distinctio earum, repudiandae voluptates porro, corrupti sunt assumenda natus blanditiis rem rerum itaque, consequuntur cumque veritatis veniam dolore deleniti nisi optio sapiente! Neque molestiae rem quia commodi pariatur provident voluptates. Excepturi deleniti hic obcaecati animi perspiciatis ipsam! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error eveniet eos ullam, non iusto, maiores dolor numquam dicta amet vitae commodi pariatur doloribus corrupti, dolorem beatae temporibus vel."} ],
+    content: " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Distinctio earum, repudiandae voluptates porro, corrupti sunt assumenda natus blanditiis rem rerum itaque, consequuntur cumque veritatis veniam dolore deleniti nisi optio sapiente! Neque molestiae rem quia commodi pariatur provident voluptates. Excepturi deleniti hic obcaecati animi perspiciatis ipsam! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error eveniet eos ullam, non iusto, maiores dolor numquam dicta amet vitae commodi pariatur doloribus corrupti, dolorem beatae temporibus vel.",
+    // If there's no subpart : content is a string --> to keep
+    // content: [ 
+    //   { title: "", content: " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Distinctio earum, repudiandae voluptates porro, corrupti sunt assumenda natus blanditiis rem rerum itaque, consequuntur cumque veritatis veniam dolore deleniti nisi optio sapiente! Neque molestiae rem quia commodi pariatur provident voluptates. Excepturi deleniti hic obcaecati animi perspiciatis ipsam! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error eveniet eos ullam, non iusto, maiores dolor numquam dicta amet vitae commodi pariatur doloribus corrupti, dolorem beatae temporibus vel."} ],
   },
 ];
 
@@ -56,7 +58,7 @@ const createElem = (typeString,
     if (typeof textContent == 'string') {
       elem.innerText = textContent;
     } else {
-      elem.innerHtml = textContent;
+      elem.innerHTML = textContent.outerHTML;
     }
   }
   return elem;
@@ -75,9 +77,12 @@ const makeCourseArticle = (articleTtl, articleContent) => {
   return course;
 };
 
-const makeArticleListeningLink = (title, content) => {
-  const articleLink = createElem('a', title, 'title-link');
+const makeArticleListeningLink = (type, title, content) => {
+  let articleLink = createElem('a', title, 'title-link');
   
+  if (type === 'chap') { // 2nd (only other) type = 'article'
+    articleLink = createElem('h3', createElem('a', title), 'chap-header');
+  }
   articleLink.addEventListener('click', () => {
     // Find if already displayed article 
     // & removes it from DOM
@@ -91,7 +96,7 @@ const makeArticleListeningLink = (title, content) => {
     // Then display newly clicked article
     const courseContainer = document.querySelector('.chap-content-container');
     courseContainer
-      .appendChild(makeCourseArticle(title, content));
+    .appendChild(makeCourseArticle(title, content));
   });
   return articleLink;
 };
@@ -102,8 +107,7 @@ const makeToggableTitlesWithBtn = (articleLinks = []) => {
   const toggleBtn = createElem('button', 'Toggle', 'toggle-btn');
   toggleBtn.addEventListener('click', () => {
     if(titlesContainer.dataset.isToggled != 'true'
-      || !titlesContainer.dataset.isToggled) {
-      console.log(titlesContainer)
+    || !titlesContainer.dataset.isToggled) {
       articleLinks.forEach((link) => {
         titlesContainer.dataset.isToggled = 'true';
         titlesContainer.appendChild(link);
@@ -123,13 +127,30 @@ const makeToggableTitlesWithBtn = (articleLinks = []) => {
 
 const makeMenuChapContainer = (chapTitle, toggableTitles) => {
   const chapContainer = createElem('div', null, 'menu-chap-container');
-  const chapHeader = createElem('h3', null, 'chap-header');
-  const chapTitleEl = createElem('h3', chapTitle);
-  chapHeader.appendChild(chapTitleEl);
+  if (!toggableTitles) {
+    return chapContainer.appendChild(chapTitle);
+  }
+  const chapHeader = createElem('h3', chapTitle, 'chap-header');
   chapHeader.appendChild(toggableTitles.btn);
   chapContainer.appendChild(chapHeader);
   chapContainer.appendChild(toggableTitles.titlesContainer);
   return chapContainer;
+};
+
+const displayArticleFromMenuTitle = () => {
+
+};
+
+const handleChapter = (chap) => {
+  if (typeof chap.content === 'string' 
+      || !chap.content) {
+      return makeArticleListeningLink('chap', chap.chapTitle, chap.content); 
+  } else {
+    const linksC = chap.content
+      .map((cc) => makeArticleListeningLink('article', cc.title, cc.content));
+    const toggableC = makeToggableTitlesWithBtn(linksC); 
+    return makeMenuChapContainer(chap.chapTitle, toggableC);
+  }
 };
 
 document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
@@ -137,11 +158,7 @@ document.addEventListener("readystatechange", (e) => { //see tjs book p. 184
     const menu = document.querySelector('.course-menu');
     // fetch data here
     const chapsC = course
-      .map((chap) => { 
-        const linksC = chap.content.map((cc) => makeArticleListeningLink(cc.title, cc.content));
-        const toggableC = makeToggableTitlesWithBtn(linksC); 
-        return makeMenuChapContainer(chap.chapTitle, toggableC);
-      });
+      .map((chap) => handleChapter(chap));
     chapsC
       .forEach((cm) => menu.appendChild(cm));
   };
