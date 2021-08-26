@@ -40,7 +40,8 @@
 
 const course = JSON.parse(ls.getItem('course-from-db'));
 
-console.log(course)
+console.log('Data from localStorage:', course);
+
 const createElem = (typeString, 
   textContent = null, 
   className = null) => {
