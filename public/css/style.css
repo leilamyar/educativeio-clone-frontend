@@ -55,7 +55,9 @@ a, a:hover, a:focus, a:active {
   outline: var(--dark-highlight) solid 1px;
   font-style: italic;
 }
-.search-course {
+.search-course,
+.title-link
+{
   display: block;
 }
 
@@ -77,4 +79,26 @@ article.chap-content-container {
   background-color:aquamarine;
   width:200px;
   height:150px;
+}
+
+.titles-container,
+.title-link 
+{
+  padding: 0.5em;
+  margin: 0.5em;
+}
+
+.chap-header {
+  display: flex;
+  justify-content: space-between;
+  /* height: max-content; */
+  margin: 0;
+}
+.chap-header>h3 {
+  margin: 0;
+}
+
+.chap-header>button {
+  height: max-content;
+  margin: auto 0;
 }
